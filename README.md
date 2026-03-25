@@ -1,4 +1,4 @@
-# Warehouse Safety Intelligence Dashboard
+# Warehouse Safety Intelligence Dashboard - https://vigil-smart.lovable.app 
 
 An AI-powered safety monitoring dashboard built for warehouse Safety Managers to reduce injury rates through real-time vision analytics.
 
