@@ -12,9 +12,9 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="mx-auto max-w-[1440px] px-6 py-4 flex items-center justify-between">
+        <div className="mx-auto max-w-[1440px] px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary shrink-0">
               <Shield size={18} className="text-primary-foreground" />
             </div>
             <div>
@@ -22,7 +22,7 @@ const Index = () => {
               <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">AI-Powered Vision Analytics</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-2 rounded-full border border-safe/30 bg-safe/10 px-3 py-1">
               <Radio size={10} className="text-safe animate-pulse" />
               <span className="text-[11px] font-medium text-safe">12 Cameras Online</span>
