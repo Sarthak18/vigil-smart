@@ -19,7 +19,7 @@ export function ZoneHeatmap() {
           <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-critical/50" />High</span>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {zones.map((zone, i) => (
           <motion.div
             key={zone.id}
