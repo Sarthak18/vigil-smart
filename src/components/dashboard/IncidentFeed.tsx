@@ -56,6 +56,7 @@ export function IncidentFeed() {
             </div>
           </motion.div>
         ))}
+        </AnimatePresence>
       </div>
     </div>
   );
