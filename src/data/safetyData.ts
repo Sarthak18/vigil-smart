@@ -2,6 +2,7 @@ export interface Incident {
   id: string;
   type: string;
   zone: string;
+  camera: string;
   severity: "low" | "medium" | "high" | "critical";
   timestamp: string;
   description: string;
@@ -25,13 +26,13 @@ export interface TrendPoint {
 }
 
 export const incidents: Incident[] = [
-  { id: "INC-0847", type: "No PPE Detected", zone: "Loading Dock B", severity: "high", timestamp: "2 min ago", description: "Worker without hard hat detected near forklift zone", aiConfidence: 94, resolved: false },
-  { id: "INC-0846", type: "Blocked Exit", zone: "Aisle 14", severity: "critical", timestamp: "8 min ago", description: "Emergency exit path obstructed by pallets", aiConfidence: 98, resolved: false },
-  { id: "INC-0845", type: "Spill Detected", zone: "Zone C-3", severity: "medium", timestamp: "15 min ago", description: "Liquid spill identified on warehouse floor", aiConfidence: 87, resolved: false },
-  { id: "INC-0844", type: "Forklift Proximity", zone: "Receiving Area", severity: "high", timestamp: "22 min ago", description: "Pedestrian within 3ft of moving forklift", aiConfidence: 96, resolved: true },
-  { id: "INC-0843", type: "Ergonomic Risk", zone: "Packing Station 7", severity: "low", timestamp: "34 min ago", description: "Improper lifting technique detected", aiConfidence: 79, resolved: true },
-  { id: "INC-0842", type: "No PPE Detected", zone: "Cold Storage", severity: "medium", timestamp: "41 min ago", description: "Missing safety goggles in chemical area", aiConfidence: 91, resolved: true },
-  { id: "INC-0841", type: "Unauthorized Access", zone: "Restricted Zone A", severity: "critical", timestamp: "1 hr ago", description: "Unidentified personnel in restricted machinery area", aiConfidence: 99, resolved: true },
+  { id: "INC-0847", type: "No PPE Detected", zone: "Loading Dock B", camera: "CAM-04", severity: "high", timestamp: "2 min ago", description: "Worker without hard hat detected near forklift zone", aiConfidence: 94, resolved: false },
+  { id: "INC-0846", type: "Blocked Exit", zone: "Aisle 14", camera: "CAM-09", severity: "critical", timestamp: "8 min ago", description: "Emergency exit path obstructed by pallets", aiConfidence: 98, resolved: false },
+  { id: "INC-0845", type: "Spill Detected", zone: "Zone C-3", camera: "CAM-07", severity: "medium", timestamp: "15 min ago", description: "Liquid spill identified on warehouse floor", aiConfidence: 87, resolved: false },
+  { id: "INC-0844", type: "Forklift Proximity", zone: "Receiving Area", camera: "CAM-02", severity: "high", timestamp: "22 min ago", description: "Pedestrian within 3ft of moving forklift", aiConfidence: 96, resolved: true },
+  { id: "INC-0843", type: "Ergonomic Risk", zone: "Packing Station 7", camera: "CAM-11", severity: "low", timestamp: "34 min ago", description: "Improper lifting technique detected", aiConfidence: 79, resolved: true },
+  { id: "INC-0842", type: "No PPE Detected", zone: "Cold Storage", camera: "CAM-08", severity: "medium", timestamp: "41 min ago", description: "Missing safety goggles in chemical area", aiConfidence: 91, resolved: true },
+  { id: "INC-0841", type: "Unauthorized Access", zone: "Restricted Zone A", camera: "CAM-12", severity: "critical", timestamp: "1 hr ago", description: "Unidentified personnel in restricted machinery area", aiConfidence: 99, resolved: true },
 ];
 
 export const zones: ZoneData[] = [

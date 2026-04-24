@@ -48,9 +48,10 @@ export function IncidentFeed() {
               </div>
               <p className="mt-1 text-sm font-medium text-foreground">{incident.type}</p>
               <p className="mt-0.5 text-xs text-muted-foreground truncate">{incident.description}</p>
-              <div className="mt-2 flex items-center gap-3 text-[10px] text-muted-foreground">
+              <div className="mt-2 flex items-center gap-3 text-[10px] text-muted-foreground flex-wrap">
                 <span className="flex items-center gap-1"><Clock size={10} />{incident.timestamp}</span>
                 <span>{incident.zone}</span>
+                <span className="font-mono text-primary/80">{incident.camera}</span>
                 <span className="flex items-center gap-1"><Eye size={10} />{incident.aiConfidence}% conf.</span>
               </div>
             </div>

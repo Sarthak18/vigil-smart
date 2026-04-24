@@ -3,13 +3,14 @@ import { incidents as seedIncidents, Incident } from "@/data/safetyData";
 
 export type ScenarioKey = "ppe" | "spill" | "forklift" | "exit" | "unauthorized";
 
-const scenarioTemplates: Record<ScenarioKey, Omit<Incident, "id" | "timestamp" | "resolved">> = {
+const scenarioTemplates: Record<ScenarioKey, Omit<Incident, "id" | "timestamp" | "resolved" | "camera"> & { cameras: string[] }> = {
   ppe: {
     type: "No PPE Detected",
     zone: "Loading Dock A",
     severity: "high",
     description: "Worker without hard hat detected entering active forklift zone",
     aiConfidence: 95,
+    cameras: ["CAM-01", "CAM-04", "CAM-08"],
   },
   spill: {
     type: "Spill Detected",
@@ -17,6 +18,7 @@ const scenarioTemplates: Record<ScenarioKey, Omit<Incident, "id" | "timestamp" |
     severity: "medium",
     description: "Liquid spill identified — slip hazard in pedestrian path",
     aiConfidence: 89,
+    cameras: ["CAM-05", "CAM-07"],
   },
   forklift: {
     type: "Forklift Proximity",
@@ -24,6 +26,7 @@ const scenarioTemplates: Record<ScenarioKey, Omit<Incident, "id" | "timestamp" |
     severity: "critical",
     description: "Pedestrian within 2ft of moving forklift — collision risk",
     aiConfidence: 97,
+    cameras: ["CAM-02", "CAM-03"],
   },
   exit: {
     type: "Blocked Exit",
@@ -31,6 +34,7 @@ const scenarioTemplates: Record<ScenarioKey, Omit<Incident, "id" | "timestamp" |
     severity: "critical",
     description: "Emergency exit obstructed by stacked pallets",
     aiConfidence: 98,
+    cameras: ["CAM-09", "CAM-10"],
   },
   unauthorized: {
     type: "Unauthorized Access",
@@ -38,6 +42,7 @@ const scenarioTemplates: Record<ScenarioKey, Omit<Incident, "id" | "timestamp" |
     severity: "high",
     description: "Unidentified personnel detected in restricted machinery area",
     aiConfidence: 96,
+    cameras: ["CAM-12"],
   },
 };
 
@@ -56,9 +61,11 @@ export function IncidentProvider({ children }: { children: ReactNode }) {
   const [injectedCount, setInjectedCount] = useState(0);
 
   const triggerScenario = useCallback((key: ScenarioKey) => {
-    const template = scenarioTemplates[key];
+    const { cameras, ...template } = scenarioTemplates[key];
+    const camera = cameras[Math.floor(Math.random() * cameras.length)];
     const newIncident: Incident = {
       ...template,
+      camera,
       id: `INC-${String(900 + Math.floor(Math.random() * 99)).padStart(4, "0")}`,
       timestamp: "just now",
       resolved: false,
