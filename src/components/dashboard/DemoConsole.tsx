@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { HardHat, Droplets, Truck, DoorClosed, UserX, Play, RotateCcw } from "lucide-react";
+import { HardHat, Droplets, Truck, DoorClosed, UserX, Play, RotateCcw, FileDown } from "lucide-react";
 import { useIncidents, ScenarioKey } from "@/store/incidentStore";
+import { generateSafetyReport } from "@/lib/generateReport";
 import { toast } from "sonner";
 
 const scenarios: { key: ScenarioKey; label: string; icon: typeof HardHat; accent: string }[] = [
@@ -12,7 +13,7 @@ const scenarios: { key: ScenarioKey; label: string; icon: typeof HardHat; accent
 ];
 
 export function DemoConsole() {
-  const { triggerScenario, resetDemo, injectedCount } = useIncidents();
+  const { incidents, triggerScenario, resetDemo, injectedCount } = useIncidents();
 
   const handleTrigger = (key: ScenarioKey, label: string) => {
     triggerScenario(key);
@@ -39,10 +40,19 @@ export function DemoConsole() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-mono text-[11px] text-muted-foreground mr-1">
             {injectedCount} simulated
           </span>
+          <button
+            onClick={() => {
+              const filename = generateSafetyReport({ incidents, injectedCount });
+              toast.success("Report generated", { description: filename });
+            }}
+            className="flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/20"
+          >
+            <FileDown size={11} /> Generate PDF Report
+          </button>
           <button
             onClick={resetDemo}
             className="flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground"
