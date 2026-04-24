@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Activity, AlertTriangle, Eye, Shield, TrendingDown, Radio } from "lucide-react";
+import { Activity, AlertTriangle, Eye, Shield, TrendingDown, Radio, Presentation } from "lucide-react";
+import { Link } from "react-router-dom";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { IncidentFeed } from "@/components/dashboard/IncidentFeed";
 import { TrendChart } from "@/components/dashboard/TrendChart";
@@ -28,6 +29,12 @@ const Index = () => {
             </div>
           </div>
           <div className="flex items-center gap-4 flex-wrap">
+            <Link
+              to="/pitch"
+              className="flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors"
+            >
+              <Presentation size={10} /> Executive Pitch
+            </Link>
             <div className="flex items-center gap-2 rounded-full border border-safe/30 bg-safe/10 px-3 py-1">
               <Radio size={10} className="text-safe animate-pulse" />
               <span className="text-[11px] font-medium text-safe">12 Cameras Online</span>
