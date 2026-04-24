@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, CheckCircle2, Clock, Eye } from "lucide-react";
-import { incidents } from "@/data/safetyData";
+import { useIncidents } from "@/store/incidentStore";
 
 const severityStyles = {
   low: "bg-muted text-muted-foreground",
@@ -10,6 +10,7 @@ const severityStyles = {
 };
 
 export function IncidentFeed() {
+  const { incidents } = useIncidents();
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -20,12 +21,15 @@ export function IncidentFeed() {
         <span className="font-mono text-xs text-muted-foreground">{incidents.filter(i => !i.resolved).length} active</span>
       </div>
       <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+        <AnimatePresence initial={false}>
         {incidents.map((incident, i) => (
           <motion.div
             key={incident.id}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.05 }}
+            layout
+            initial={{ opacity: 0, x: -20, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ delay: Math.min(i * 0.03, 0.2) }}
             className={`group flex items-start gap-3 rounded-lg border border-border/50 p-3 transition-colors hover:bg-secondary/50 ${!incident.resolved ? "animate-pulse-glow" : ""}`}
           >
             <div className="mt-0.5">
@@ -52,6 +56,7 @@ export function IncidentFeed() {
             </div>
           </motion.div>
         ))}
+        </AnimatePresence>
       </div>
     </div>
   );

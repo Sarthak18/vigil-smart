@@ -6,8 +6,13 @@ import { TrendChart } from "@/components/dashboard/TrendChart";
 import { ZoneHeatmap } from "@/components/dashboard/ZoneHeatmap";
 import { HazardBreakdown } from "@/components/dashboard/HazardBreakdown";
 import { SafetyScore } from "@/components/dashboard/SafetyScore";
+import { DemoConsole } from "@/components/dashboard/DemoConsole";
+import { useIncidents } from "@/store/incidentStore";
 
 const Index = () => {
+  const { incidents, injectedCount } = useIncidents();
+  const activeCount = incidents.filter((i) => !i.resolved).length;
+  const aiDetectionsToday = 71 + injectedCount;
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
@@ -37,6 +42,9 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="mx-auto max-w-[1440px] px-6 py-6 space-y-6">
+        {/* Demo Console */}
+        <DemoConsole />
+
         {/* Stats Row */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -44,9 +52,9 @@ const Index = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
         >
           <StatCard label="Injury Rate" value="0.8" change="↓ 42% vs last month" changeType="positive" icon={TrendingDown} accentColor="safe" />
-          <StatCard label="Active Incidents" value="3" change="2 critical, 1 high" changeType="negative" icon={AlertTriangle} accentColor="critical" />
-          <StatCard label="AI Detections Today" value="71" change="↑ 18% detection rate" changeType="positive" icon={Eye} accentColor="primary" />
-          <StatCard label="Near Misses Prevented" value="14" change="This week" changeType="neutral" icon={Activity} accentColor="warning" />
+          <StatCard label="Active Incidents" value={activeCount} change={`${incidents.filter(i => i.severity === "critical" && !i.resolved).length} critical`} changeType="negative" icon={AlertTriangle} accentColor="critical" />
+          <StatCard label="AI Detections Today" value={aiDetectionsToday} change="↑ 18% detection rate" changeType="positive" icon={Eye} accentColor="primary" />
+          <StatCard label="Near Misses Prevented" value={14 + injectedCount} change="This week" changeType="neutral" icon={Activity} accentColor="warning" />
         </motion.div>
 
         {/* Main Grid */}
