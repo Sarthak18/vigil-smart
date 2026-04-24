@@ -88,11 +88,12 @@ export function generateSafetyReport({ incidents, injectedCount }: ReportInput) 
   } else {
     autoTable(doc, {
       startY: cursorY + 6,
-      head: [["ID", "Type", "Zone", "Severity", "AI Conf.", "When"]],
+      head: [["ID", "Type", "Zone", "Camera", "Severity", "AI Conf.", "When"]],
       body: active.map((i) => [
         i.id,
         i.type,
         i.zone,
+        i.camera,
         i.severity.toUpperCase(),
         `${i.aiConfidence}%`,
         i.timestamp,
@@ -100,6 +101,7 @@ export function generateSafetyReport({ incidents, injectedCount }: ReportInput) 
       theme: "striped",
       headStyles: { fillColor: [220, 38, 38], textColor: 255, fontSize: 9 },
       bodyStyles: { fontSize: 9 },
+      columnStyles: { 3: { fontStyle: "bold", textColor: [30, 64, 175] } },
       margin: { left: 40, right: 40 },
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -122,11 +124,12 @@ export function generateSafetyReport({ incidents, injectedCount }: ReportInput) 
   } else {
     autoTable(doc, {
       startY: cursorY + 6,
-      head: [["ID", "Type", "Zone", "Severity", "AI Conf.", "When"]],
+      head: [["ID", "Type", "Zone", "Camera", "Severity", "AI Conf.", "When"]],
       body: resolved.map((i) => [
         i.id,
         i.type,
         i.zone,
+        i.camera,
         i.severity.toUpperCase(),
         `${i.aiConfidence}%`,
         i.timestamp,
@@ -134,9 +137,87 @@ export function generateSafetyReport({ incidents, injectedCount }: ReportInput) 
       theme: "striped",
       headStyles: { fillColor: [34, 197, 94], textColor: 255, fontSize: 9 },
       bodyStyles: { fontSize: 9 },
+      columnStyles: { 3: { fontStyle: "bold", textColor: [30, 64, 175] } },
       margin: { left: 40, right: 40 },
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    cursorY = (doc as any).lastAutoTable.finalY + 28;
   }
+
+  // ===== Multi-Camera Activity =====
+  // Group incidents by camera
+  const byCamera = new Map<string, Incident[]>();
+  for (const inc of incidents) {
+    if (!byCamera.has(inc.camera)) byCamera.set(inc.camera, []);
+    byCamera.get(inc.camera)!.push(inc);
+  }
+  const cameraRows = Array.from(byCamera.entries())
+    .map(([cam, list]) => {
+      const types = Array.from(new Set(list.map((i) => i.type)));
+      const activeOnCam = list.filter((i) => !i.resolved).length;
+      const topSeverity =
+        list.find((i) => i.severity === "critical")?.severity ??
+        list.find((i) => i.severity === "high")?.severity ??
+        list.find((i) => i.severity === "medium")?.severity ??
+        "low";
+      return {
+        camera: cam,
+        zone: list[0].zone,
+        total: list.length,
+        active: activeOnCam,
+        types,
+        topSeverity,
+      };
+    })
+    .sort((a, b) => b.total - a.total);
+
+  const multiCamRows = cameraRows.filter((r) => r.total > 1);
+
+  // New page if not enough room
+  if (cursorY > doc.internal.pageSize.getHeight() - 200) {
+    doc.addPage();
+    cursorY = 60;
+  }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(15, 23, 42);
+  doc.text("Multi-Camera Activity", 40, cursorY);
+  cursorY += 8;
+  doc.line(40, cursorY, pageWidth - 40, cursorY);
+  cursorY += 6;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text(
+    `${cameraRows.length} cameras contributed detections  -  ${multiCamRows.length} cameras spotted multiple incidents`,
+    40,
+    cursorY + 12
+  );
+  cursorY += 18;
+
+  autoTable(doc, {
+    startY: cursorY + 6,
+    head: [["Camera", "Zone", "Total", "Active", "Top Severity", "Hazard Types"]],
+    body: cameraRows.map((r) => [
+      r.camera,
+      r.zone,
+      String(r.total),
+      String(r.active),
+      r.topSeverity.toUpperCase(),
+      r.types.join(", "),
+    ]),
+    theme: "grid",
+    headStyles: { fillColor: [30, 41, 59], textColor: 255, fontSize: 9 },
+    bodyStyles: { fontSize: 9 },
+    columnStyles: {
+      0: { fontStyle: "bold", textColor: [30, 64, 175] },
+      2: { halign: "center" },
+      3: { halign: "center" },
+    },
+    margin: { left: 40, right: 40 },
+  });
 
   // ===== Footer on every page =====
   const pageCount = doc.getNumberOfPages();
